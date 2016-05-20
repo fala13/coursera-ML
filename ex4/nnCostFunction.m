@@ -74,14 +74,14 @@ yv;
 bv = sparse(1:ny,num_labels,1, ny, num_labels);
 
 % FP
-X = [ones(m, 1) X];
-z2 = sigmoid(X * Theta1');
-z2 = [ones(size(z2,1), 1) z2];
-z3 = sigmoid(z2 * Theta2');
+Xb = [ones(m, 1) X];
+z2 = (Xb * Theta1');
+z2b = [ones(size(z2,1), 1) sigmoid(z2)];
+z3 = (z2b * Theta2');
+h= sigmoid(z3);
 %ok
-[_, p] = max(z3, [], 2);
+[_, p] = max(h, [], 2);
 p == y;
-h= z3;
 y = yv;
 
 J=sum(sum((-y.*log(h) - (1-y).*log(1-h)))/m);
@@ -91,13 +91,15 @@ J=J+L;
 %grad = (h - y)'*X/m;% + [0 (lambda/m).*t1'];
 
 e3 = h - y;
-e2 = (Theta2(:,2:end)'*e3')'.* sigmoidGradient(z2(:,2:end));
+%e2 = (Theta2(:,2:end)'*e3')'.* sigmoidGradient(z2);
+e2 = (Theta2(:,2:end)'*e3')'.* sigmoidGradient(z2);
+%e2 = (Theta2'*e3')'.* sigmoidGradient(z2b);
 
-d1 = e2'*X;
-d2 = e3'*z2;
+d1 = e2'*Xb;
+d2 = e3'*z2b;
 
-Theta1_grad = d1/m;
-Theta2_grad = d2/m;
+Theta1_grad = d1/(m); % < mniejszy o 1/10
+Theta2_grad = d2/(m);
 % -------------------------------------------------------------
 
 % =========================================================================
