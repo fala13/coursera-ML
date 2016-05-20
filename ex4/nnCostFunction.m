@@ -62,24 +62,42 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+% char func on y
+ny = size(y,1);
+yv = zeros(ny,num_labels);
 
+for i = 1:ny
+  yv(i,y(i))=1;
+end;
 
+yv;
+bv = sparse(1:ny,num_labels,1, ny, num_labels);
 
+% FP
+X = [ones(m, 1) X];
+z2 = sigmoid(X * Theta1');
+z2 = [ones(size(z2,1), 1) z2];
+z3 = sigmoid(z2 * Theta2');
+%ok
+[_, p] = max(z3, [], 2);
+p == y;
+h= z3;
+y = yv;
 
+J=sum(sum((-y.*log(h) - (1-y).*log(1-h)))/m);
+L= lambda/(2*m) * (sum(Theta1(:,2:end)(:).^2) + sum(Theta2(:,2:end)(:).^2));
 
+J=J+L;
+%grad = (h - y)'*X/m;% + [0 (lambda/m).*t1'];
 
+e3 = h - y;
+e2 = (Theta2(:,2:end)'*e3')'.* sigmoidGradient(z2(:,2:end));
 
+d1 = e2'*X;
+d2 = e3'*z2;
 
-
-
-
-
-
-
-
-
-
-
+Theta1_grad = d1/m;
+Theta2_grad = d2/m;
 % -------------------------------------------------------------
 
 % =========================================================================
