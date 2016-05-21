@@ -98,8 +98,12 @@ e2 = (Theta2(:,2:end)'*e3')'.* sigmoidGradient(z2);
 d1 = e2'*Xb;
 d2 = e3'*z2b;
 
-Theta1_grad = d1/(m); % < mniejszy o 1/10
-Theta2_grad = d2/(m);
+l1 = lambda/m*Theta1;
+l2 = lambda/m*Theta2;
+l1(:,1) = 0;
+l2(:,1) = 0;
+Theta1_grad = d1/(m) + l1; % < mniejszy o 1/10
+Theta2_grad = d2/(m) + l2;
 % -------------------------------------------------------------
 
 % =========================================================================
