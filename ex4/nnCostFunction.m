@@ -13,7 +13,6 @@ function [J grad] = nnCostFunction(nn_params, ...
 %   The returned parameter grad should be a "unrolled" vector of the
 %   partial derivatives of the neural network.
 %
-
 % Reshape nn_params back into the parameters Theta1 and Theta2, the weight matrices
 % for our 2 layer neural network
 Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), ...
@@ -64,45 +63,45 @@ Theta2_grad = zeros(size(Theta2));
 
 % char func on y
 ny = size(y,1);
-yv = zeros(ny,num_labels);
 
-for i = 1:ny
-  yv(i,y(i))=1;
-end;
+%yv = zeros(ny,num_labels);
 
-yv;
-bv = sparse(1:ny,num_labels,1, ny, num_labels);
-
+%for i = 1:ny
+%  yv(i,y(i))=1;
+%end;
+yv = eye(num_labels)(y,:); % trick to convert y to vector of 0 and 1
 % FP
-Xb = [ones(m, 1) X];
-z2 = (Xb * Theta1');
+X  = [ones(m, 1) X];
+z2 = (X  * Theta1'); % 0.055ms
 z2b = [ones(size(z2,1), 1) sigmoid(z2)];
 z3 = (z2b * Theta2');
-h= sigmoid(z3);
-%ok
-[_, p] = max(h, [], 2);
-p == y;
-y = yv;
+h = sigmoid(z3);
+%[_, p] = max(h, [], 2);
+%y = yv;
+%y = bv;
 
-J=sum(sum((-y.*log(h) - (1-y).*log(1-h)))/m);
+% cost 
+J=sum(sum((-yv.*log(h) - (1-yv).*log(1-h)))/m);
+% reg
 L= lambda/(2*m) * (sum(Theta1(:,2:end)(:).^2) + sum(Theta2(:,2:end)(:).^2));
 
 J=J+L;
-%grad = (h - y)'*X/m;% + [0 (lambda/m).*t1'];
 
-e3 = h - y;
-%e2 = (Theta2(:,2:end)'*e3')'.* sigmoidGradient(z2);
-e2 = (Theta2(:,2:end)'*e3')'.* sigmoidGradient(z2);
-%e2 = (Theta2'*e3')'.* sigmoidGradient(z2b);
+% errors
+e3 = h - yv;
+e2 = (Theta2(:,2:end)'*e3')'.* sigmoidGradient(z2); % 0.006 ms
 
-d1 = e2'*Xb;
+% gradients 0.055 ms
+%d1 = zeros(size(e2,2), size(X,2));
+d1 = e2'*X ;
 d2 = e3'*z2b;
 
+% reg for grad
 l1 = lambda/m*Theta1;
 l2 = lambda/m*Theta2;
 l1(:,1) = 0;
 l2(:,1) = 0;
-Theta1_grad = d1/(m) + l1; % < mniejszy o 1/10
+Theta1_grad = d1/(m) + l1;
 Theta2_grad = d2/(m) + l2;
 % -------------------------------------------------------------
 
@@ -110,6 +109,5 @@ Theta2_grad = d2/(m) + l2;
 
 % Unroll gradients
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
-
 
 end
