@@ -1,0 +1,14 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+featureNormalize	featureNormalize.m	/^function [X_norm, mu, sigma] = featureNormalize(X)$/;"	f
+fmincg	fmincg.m	/^function [X, fX, i] = fmincg(f, X, options, P1, P2, P3, P4, P5)$/;"	f
+linearRegCostFunction	linearRegCostFunction.m	/^function [J, grad] = linearRegCostFunction(X, y, theta, lambda)$/;"	f
+output	submit.m	/^function out = output(partId, auxstring)$/;"	f
+plotFit	plotFit.m	/^function plotFit(min_x, max_x, mu, sigma, theta, p)$/;"	f
+polyFeatures	polyFeatures.m	/^function [X_poly] = polyFeatures(X, p)$/;"	f
+submit	submit.m	/^function submit()$/;"	f
+trainLinearReg	trainLinearReg.m	/^function [theta] = trainLinearReg(X, y, lambda)$/;"	f
